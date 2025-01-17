@@ -54,7 +54,13 @@ const Grid: React.FC<GridProps> = ({ actors, gridSize }) => {
         ))}
       </div>
       <button
-        className="submit-button mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600"
+        className="submit-button mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 flex items-center"
+        onClick={handleSubmitGroup}
+      >
+        Shuffle
+      </button>
+      <button
+        className="submit-button mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 flex items-center"
         onClick={handleSubmitGroup}
       >
         Submit
