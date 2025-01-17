@@ -27,6 +27,9 @@ const App = () => {
       <h1 className="text-center text-3xl font-bold text-white mb-4 pt-4">
         StarLinks
       </h1>
+      <h2 className="text-center text-xl font-bold text-white mb-4">
+        Create four groups of four!
+      </h2>
       <Grid actors={actors} gridSize={4} />
     </div>
   );
