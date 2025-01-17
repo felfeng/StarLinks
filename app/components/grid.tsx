@@ -13,7 +13,7 @@ interface GridProps {
 const Grid: React.FC<GridProps> = ({ actors, gridSize }) => {
   const [selected, setSelected] = useState<string[]>([]);
   const [completedGroups, setCompletedGroups] = useState<string[][]>([]);
-
+  const [shuffledGroups, setShuffledGroups] = useState<string[][]>([]);
   const handleSelect = (id: string) => {
     if (selected.includes(id)) {
       setSelected(selected.filter((actorId) => actorId !== id));
@@ -53,18 +53,20 @@ const Grid: React.FC<GridProps> = ({ actors, gridSize }) => {
           </div>
         ))}
       </div>
-      <button
-        className="submit-button mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 flex items-center"
-        onClick={handleSubmitGroup}
-      >
-        Shuffle
-      </button>
-      <button
-        className="submit-button mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 flex items-center"
-        onClick={handleSubmitGroup}
-      >
-        Submit
-      </button>
+      <div className="flex justify-center">
+        <button
+          className="submit-button mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 flex items-center"
+          onClick={handleSubmitGroup}
+        >
+          Shuffle
+        </button>
+        <button
+          className="submit-button mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 flex items-center"
+          onClick={handleSubmitGroup}
+        >
+          Submit
+        </button>
+      </div>
     </div>
   );
 };
