@@ -40,7 +40,7 @@ const Grid: React.FC<GridProps> = ({ actors, gridSize }) => {
         {actors.map((actor) => (
           <div
             key={actor.id}
-            className={`flex items-center justify-center text-center rounded-lg cursor-pointer aspect-[3/2] uppercase font-bold text-lg py-0 ${
+            className={`flex items-center justify-center text-center rounded-lg cursor-pointer aspect-[3/1.7] uppercase font-bold text-lg ${
               isCompleted(actor.id)
                 ? "bg-green text-white" // completed group style
                 : selected.includes(actor.id)
