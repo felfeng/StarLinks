@@ -24,7 +24,7 @@ const actors = [
 const App = () => {
   return (
     <div className="app-container bg-background min-h-screen h-full w-full">
-      <h1 className="text-center text-3xl font-bold text-white mb-4 mt-4">
+      <h1 className="text-center text-3xl font-bold text-white mb-4 pt-4">
         StarLinks
       </h1>
       <Grid actors={actors} gridSize={4} />
