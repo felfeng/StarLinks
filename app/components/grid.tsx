@@ -53,15 +53,15 @@ const Grid: React.FC<GridProps> = ({ actors, gridSize }) => {
           </div>
         ))}
       </div>
-      <div className="flex justify-center">
+      <div className="flex justify-center gap-4">
         <button
-          className="submit-button mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 flex items-center"
+          className="submit-button mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 flex items-center border-2 border-white"
           onClick={handleSubmitGroup}
         >
           Shuffle
         </button>
         <button
-          className="submit-button mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 flex items-center"
+          className="submit-button mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 flex items-center border-2 border-white"
           onClick={handleSubmitGroup}
         >
           Submit

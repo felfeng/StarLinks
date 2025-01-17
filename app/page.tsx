@@ -3,22 +3,22 @@ import React from "react";
 import Grid from "./components/grid";
 
 const actors = [
-  { id: "1", name: "Helena Bonham Carter" },
-  { id: "2", name: "Brad Pitt" },
+  { id: "1", name: "Kieran Culkin" },
+  { id: "2", name: "Uma Thurman" },
   { id: "3", name: "Edward Norton" },
   { id: "4", name: "Jared Leto" },
   { id: "5", name: "Timothee Chalamet" },
   { id: "6", name: "Oscar Issac" },
-  { id: "7", name: "Josh Brolin" },
+  { id: "7", name: "Bruce Willis" },
   { id: "8", name: "Jason Momoa" },
   { id: "9", name: "Michael Cera" },
-  { id: "10", name: "Kieran Culkin" },
+  { id: "10", name: "Helena Bonham Carter" },
   { id: "11", name: "Anna Kendrick" },
   { id: "12", name: "Chris Evans" },
   { id: "13", name: "John Travolta" },
-  { id: "14", name: "Uma Thurman" },
+  { id: "14", name: "Brad Pitt" },
   { id: "15", name: "Samuel L. Jackson" },
-  { id: "16", name: "Bruce Willis" },
+  { id: "16", name: "Josh Brolin" },
 ];
 
 const App = () => {
