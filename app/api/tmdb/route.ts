@@ -3,26 +3,45 @@ import axios from 'axios';
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const query = searchParams.get('query');
+  const endpoint = searchParams.get('endpoint');
+  const movieId = searchParams.get('movieId');
 
-  if (!query) {
+  if (!endpoint) {
     return NextResponse.json(
-      { error: 'Query parameter is required' },
+      { error: 'Endpoint parameter is required' },
       { status: 400 }
     );
   }
 
   try {
-    const response = await axios.get(
-      `${process.env.TMDB_API_URL}/search/movie`,
-      {
-        params: {
-          api_key: process.env.TMDB_API_KEY,
-          query,
-        },
-      }
+    if (endpoint === 'popular') {
+      const response = await axios.get(
+        `${process.env.TMDB_API_URL}/movie/popular`,
+        {
+          params: {
+            api_key: process.env.TMDB_API_KEY,
+          },
+        }
+      );
+      return NextResponse.json(response.data);
+    }
+    
+    if (endpoint === 'credits' && movieId) {
+      const response = await axios.get(
+        `${process.env.TMDB_API_URL}/movie/${movieId}/credits`,
+        {
+          params: {
+            api_key: process.env.TMDB_API_KEY,
+          },
+        }
+      );
+      return NextResponse.json(response.data);
+    }
+
+    return NextResponse.json(
+      { error: 'Invalid endpoint' },
+      { status: 400 }
     );
-    return NextResponse.json(response.data);
   } catch (error) {
     console.error(error);
     return NextResponse.json(
