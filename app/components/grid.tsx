@@ -17,7 +17,7 @@ interface GridProps {
   movies: Movie[];
 }
 
-const Grid: React.FC<GridProps> = ({ actors, gridSize, movies }) => {
+const Grid: React.FC<GridProps> = ({ actors, movies }) => {
   const [selected, setSelected] = useState<string[]>([]);
   const [completedGroups, setCompletedGroups] = useState<string[][]>([]);
   const [mistakes, setMistakes] = useState(3); // can only make 3 mistakes

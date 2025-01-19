@@ -13,6 +13,21 @@ interface Movie {
   actors: Actor[];
 }
 
+interface MovieResponse {
+  results: {
+    id: number;
+    title: string;
+  }[];
+}
+
+interface CreditsResponse {
+  cast: {
+    id: number;
+    name: string;
+    known_for_department: string;
+  }[];
+}
+
 const App = () => {
   const [actors, setActors] = useState<Actor[]>([]);
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -31,7 +46,7 @@ const App = () => {
 
         // fetch cast for each movie
         const moviesWithCast = await Promise.all(
-          selectedMovies.map(async (movie: any) => {
+          selectedMovies.map(async (movie) => {
             const creditsResponse = await fetch(`/api/tmdb?endpoint=credits&movieId=${movie.id}`);
             const creditsData = await creditsResponse.json();
             
