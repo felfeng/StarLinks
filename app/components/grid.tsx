@@ -25,14 +25,14 @@ const Grid: React.FC<GridProps> = ({ actors, gridSize, movies }) => {
   const handleSelect = (id: string) => {
     if (selected.includes(id)) {
       setSelected(selected.filter((actorId) => actorId !== id));
-    } else if (selected.length < 4) { // Only allow selection if less than 4 actors are selected
+    } else if (selected.length < 4) { // only allow selection if less than 4 actors are selected
       setSelected([...selected, id]);
     }
   };
 
   const handleSubmitGroup = () => {
     if (selected.length === 4) {
-      // Check if all selected actors are from the same movie
+      // check if all selected actors are from the same movie
       const validMovie = movies.find(movie => 
         selected.every(actorId => 
           movie.actors.some(actor => actor.id === actorId)
@@ -69,6 +69,27 @@ const Grid: React.FC<GridProps> = ({ actors, gridSize, movies }) => {
   const isCompleted = (id: string) =>
     completedGroups.some((group) => group.includes(id));
 
+  const MistakeCircles = ({ count }: { count: number }) => {
+    return (
+      <div className="flex gap-2 items-center ml-2">
+        {[...Array(3)].map((_, index) => (
+          <div
+            key={index}
+            className={`w-3 h-3 rounded-full ${
+              index < count
+                ? index === 0
+                  ? "bg-orange"
+                  : index === 1
+                  ? "bg-green"
+                  : "bg-blue"
+                : "bg-gray-600"
+            }`}
+          />
+        ))}
+      </div>
+    );
+  };
+
   return (
     <div className="grid-container max-w-2xl mx-auto">
       <div className={`grid grid-cols-4 gap-4 rounded-lg`}>
@@ -92,9 +113,13 @@ const Grid: React.FC<GridProps> = ({ actors, gridSize, movies }) => {
           </div>
         ))}
       </div>
-      <div className="flex justify-center mt-4 text-white text-lg">
+      
+      {/* mistakes line */}
+      <div className="flex justify-center mt-4 text-white text-lg items-center">
         Mistakes Remaining: {mistakes}
+        <MistakeCircles count={mistakes} />
       </div>
+
       <div className="flex justify-center gap-4">
         <button
           className="submit-button mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 flex items-center border-2 border-white"
