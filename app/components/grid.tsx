@@ -41,14 +41,12 @@ const Grid: React.FC<GridProps> = ({ actors, gridSize, movies }) => {
 
       if (validMovie) {
         setCompletedGroups([...completedGroups, selected]);
-        setSelected([]); // clear selection
-        // Optional: Show which movie they were from
+        setSelected([]);
         alert(`Correct! These actors appeared in "${validMovie.title}"`);
       } else {
         setMistakes(mistakes - 1);
         if (mistakes <= 1) {
           alert("Game Over! You've run out of attempts.");
-          // Handle game over logic here
           return;
         }
         alert("These actors didn't appear in the same movie! Try again.");
@@ -59,10 +57,7 @@ const Grid: React.FC<GridProps> = ({ actors, gridSize, movies }) => {
   };
 
   const handleShuffle = () => {
-    // Create a copy of the actors array and shuffle it
     const shuffledActors = [...actors].sort(() => Math.random() - 0.5);
-    // You'll need to implement a way to update the actors array
-    // This might require lifting state up to the parent component
     console.log("Shuffled actors:", shuffledActors);
   };
 
@@ -113,13 +108,14 @@ const Grid: React.FC<GridProps> = ({ actors, gridSize, movies }) => {
           </div>
         ))}
       </div>
-      
+
       {/* mistakes line */}
       <div className="flex justify-center mt-4 text-white text-lg items-center">
         Mistakes Remaining: {mistakes}
         <MistakeCircles count={mistakes} />
       </div>
-
+      
+      {/* shuffle and submit line */}
       <div className="flex justify-center gap-4">
         <button
           className="submit-button mt-4 bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 flex items-center border-2 border-white"
@@ -139,7 +135,8 @@ const Grid: React.FC<GridProps> = ({ actors, gridSize, movies }) => {
           Submit
         </button>
       </div>
-      {/* Optional: Display completed groups */}
+
+      {/* display completed groups */}
       {completedGroups.length > 0 && (
         <div className="mt-8 text-white">
           <h3 className="text-center text-xl mb-4">Completed Groups:</h3>
