@@ -37,7 +37,7 @@ const App = () => {
     const fetchMoviesAndActors = async () => {
       try {
         const moviesResponse = await fetch('/api/tmdb?endpoint=popular');
-        const moviesData = await moviesResponse.json();
+        const moviesData: MovieResponse = await moviesResponse.json();
         
         const selectedMovies = moviesData.results
           .slice(0, 50) // out of top 50 popular movies
@@ -48,13 +48,13 @@ const App = () => {
         const moviesWithCast = await Promise.all(
           selectedMovies.map(async (movie) => {
             const creditsResponse = await fetch(`/api/tmdb?endpoint=credits&movieId=${movie.id}`);
-            const creditsData = await creditsResponse.json();
+            const creditsData: CreditsResponse = await creditsResponse.json();
             
             // get top 4 billed actors
             const topCast = creditsData.cast
-              .filter((actor: any) => actor.known_for_department === "Acting")
+              .filter((actor) => actor.known_for_department === "Acting")
               .slice(0, 4)
-              .map((actor: any) => ({
+              .map((actor) => ({
                 id: actor.id.toString(),
                 name: actor.name,
               }));
