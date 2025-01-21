@@ -15,19 +15,21 @@ export async function GET(request: Request) {
 
   try {
     if (endpoint === 'popular') {
-      const response = await axios.get(
-        `${process.env.TMDB_API_URL}/discover/movie`,
-        {
+      const pages = await Promise.all([1, 2, 3].map(page =>
+        axios.get(`${process.env.TMDB_API_URL}/discover/movie`, {
           params: {
             api_key: process.env.TMDB_API_KEY,
             sort_by: 'vote_count.desc',
             'vote_count.gte': 10000,
             'vote_average.gte': 7.0,
-            page: 1,
+            page: page,
           },
-        }
-      );
-      return NextResponse.json(response.data);
+        })
+      ));
+      const allResults = pages.flatMap(response => response.data.results);
+      const top50 = allResults.slice(0, 50);
+
+      return NextResponse.json({ results: top50 });
     }
     
     if (endpoint === 'credits' && movieId) {
