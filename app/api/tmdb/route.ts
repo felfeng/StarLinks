@@ -16,10 +16,14 @@ export async function GET(request: Request) {
   try {
     if (endpoint === 'popular') {
       const response = await axios.get(
-        `${process.env.TMDB_API_URL}/movie/popular`,
+        `${process.env.TMDB_API_URL}/discover/movie`,
         {
           params: {
             api_key: process.env.TMDB_API_KEY,
+            sort_by: 'vote_count.desc',
+            'vote_average.gte': 7.0,
+            page: 1,
+            include_adult: false,
           },
         }
       );
