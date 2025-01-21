@@ -21,9 +21,9 @@ export async function GET(request: Request) {
           params: {
             api_key: process.env.TMDB_API_KEY,
             sort_by: 'vote_count.desc',
+            'vote_count.gte': 10000,
             'vote_average.gte': 7.0,
             page: 1,
-            include_adult: false,
           },
         }
       );
