@@ -17,6 +17,8 @@ interface MovieResponse {
   results: {
     id: number;
     title: string;
+    vote_count: number;
+    vote_average: number;
   }[];
 }
 
@@ -38,6 +40,15 @@ const App = () => {
       try {
         const moviesResponse = await fetch('/api/tmdb?endpoint=popular');
         const moviesData: MovieResponse = await moviesResponse.json();
+
+        const top50Movies = moviesData.results.slice(0, 50);
+        
+        console.log('All 50 movies:', top50Movies.map(movie => ({
+          title: movie.title,
+          id: movie.id,
+          vote_count: movie.vote_count,
+          vote_average: movie.vote_average
+        })));
         
         const selectedMovies = moviesData.results
           .slice(0, 50) // out of top 50 popular movies
