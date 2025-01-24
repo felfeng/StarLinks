@@ -1,3 +1,18 @@
+type TMDBCastMember = {
+  adult: boolean;
+  gender: number;
+  id: number;
+  known_for_department: string;
+  name: string;
+  original_name: string;
+  popularity: number;
+  profile_path: string | null;
+  cast_id: number;
+  character: string;
+  credit_id: string;
+  order: number;
+};
+
 import { NextResponse } from "next/server";
 import axios, { all } from "axios";
 
@@ -46,16 +61,20 @@ export async function GET(request: Request) {
         );
 
         const topActors = credits.data.cast
-          .filter((actor) => actor.known_for_department === "Acting")
+          .filter(
+            (actor: TMDBCastMember) => actor.known_for_department === "Acting"
+          )
           .slice(0, 4);
 
-        const hasOverlap = topActors.some((actor) =>
+        const hasOverlap = topActors.some((actor: TMDBCastMember) =>
           usedActorIds.has(actor.id)
         );
 
         if (!hasOverlap && topActors.length === 4) {
           selectedMovies.push(movie);
-          topActors.forEach((actor) => usedActorIds.add(actor.id));
+          topActors.forEach((actor: TMDBCastMember) =>
+            usedActorIds.add(actor.id)
+          );
         }
       }
 
