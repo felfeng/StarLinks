@@ -1,39 +1,85 @@
 "use client";
 import { useState } from "react";
 import { signIn } from "@/app/lib/firebase/auth";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function SignIn() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    setLoading(true);
+
     try {
       await signIn(email, password);
-      // successful sign in
-    } catch (error) {
-      setError("Failed to sign in");
-      console.error(error);
+      router.push("/");
+    } catch (error: any) {
+      setError(error.message || "Failed to sign in");
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input
-        type="email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-        placeholder="Email"
-      />
-      <input
-        type="password"
-        value={password}
-        onChange={(e) => setPassword(e.target.value)}
-        placeholder="Password"
-      />
-      {error && <p>{error}</p>}
-      <button type="submit">Sign In</button>
-    </form>
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="bg-element p-8 rounded-lg shadow-lg w-full max-w-md">
+        <h2 className="text-2xl font-bold text-text mb-6 text-center">
+          Sign In
+        </h2>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="email" className="block text-text mb-1">
+              Email
+            </label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full p-2 rounded bg-background text-text border border-element"
+              required
+            />
+          </div>
+
+          <div>
+            <label htmlFor="password" className="block text-text mb-1">
+              Password
+            </label>
+            <input
+              id="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full p-2 rounded bg-background text-text border border-element"
+              required
+            />
+          </div>
+
+          {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+
+          <button
+            type="submit"
+            disabled={loading}
+            className="w-full bg-blue hover:bg-blue/80 text-text py-2 px-4 rounded transition-colors disabled:opacity-50"
+          >
+            {loading ? "Signing in..." : "Sign In"}
+          </button>
+        </form>
+
+        <p className="mt-4 text-text text-center">
+          Don&apos;t have an account?{" "}
+          <Link href="/signup" className="text-blue hover:underline">
+            Sign Up
+          </Link>
+        </p>
+      </div>
+    </div>
   );
 }
