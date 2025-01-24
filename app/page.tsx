@@ -1,8 +1,6 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Grid from "./components/grid";
-import SignIn from "./components/auth/signIn";
-import SignUp from "./components/auth/signUp";
 
 interface Actor {
   id: string;
