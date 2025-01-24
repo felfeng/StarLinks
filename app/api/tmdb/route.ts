@@ -28,8 +28,38 @@ export async function GET(request: Request) {
           })
         )
       );
-      const allResults = pages.flatMap((response) => response.data.results);
-      return NextResponse.json({ results: allResults });
+
+      const allMovies = pages.flatMap((response) => response.data.results);
+      const selectedMovies = [];
+      const usedActorIds = new Set();
+
+      for (const movie of allMovies) {
+        if (selectedMovies.length === 4) break;
+
+        const credits = await axios.get(
+          `${process.env.TMDB_API_URL}/movie/${movie.id}/credits`,
+          {
+            params: {
+              api_key: process.env.TMDB_API_KEY,
+            },
+          }
+        );
+
+        const topActors = credits.data.cast
+          .filter((actor) => actor.known_for_department === "Acting")
+          .slice(0, 4);
+
+        const hasOverlap = topActors.some((actor) =>
+          usedActorIds.has(actor.id)
+        );
+
+        if (!hasOverlap && topActors.length === 4) {
+          selectedMovies.push(movie);
+          topActors.forEach((actor) => usedActorIds.add(actor.id));
+        }
+      }
+
+      return NextResponse.json({ results: selectedMovies });
     }
 
     if (endpoint === "credits" && movieId) {

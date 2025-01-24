@@ -25,7 +25,8 @@ const Grid: React.FC<GridProps> = ({ actors, movies }) => {
   const handleSelect = (id: string) => {
     if (selected.includes(id)) {
       setSelected(selected.filter((actorId) => actorId !== id));
-    } else if (selected.length < 4) { // only allow selection if less than 4 actors are selected
+    } else if (selected.length < 4) {
+      // only allow selection if less than 4 actors are selected
       setSelected([...selected, id]);
     }
   };
@@ -33,9 +34,9 @@ const Grid: React.FC<GridProps> = ({ actors, movies }) => {
   const handleSubmitGroup = () => {
     if (selected.length === 4) {
       // check if all selected actors are from the same movie
-      const validMovie = movies.find(movie => 
-        selected.every(actorId => 
-          movie.actors.some(actor => actor.id === actorId)
+      const validMovie = movies.find((movie) =>
+        selected.every((actorId) =>
+          movie.actors.some((actor) => actor.id === actorId)
         )
       );
 
@@ -114,7 +115,7 @@ const Grid: React.FC<GridProps> = ({ actors, movies }) => {
         Mistakes Remaining: {mistakes}
         <MistakeCircles count={mistakes} />
       </div>
-      
+
       {/* shuffle and submit line */}
       <div className="flex justify-center gap-4">
         <button
@@ -142,17 +143,15 @@ const Grid: React.FC<GridProps> = ({ actors, movies }) => {
           <h3 className="text-center text-xl mb-4">Completed Groups:</h3>
           <div className="grid gap-4">
             {completedGroups.map((group, index) => {
-              const movie = movies.find(m => 
-                group.every(actorId => 
-                  m.actors.some(a => a.id === actorId)
-                )
+              const movie = movies.find((m) =>
+                group.every((actorId) => m.actors.some((a) => a.id === actorId))
               );
               return (
                 <div key={index} className="bg-element p-4 rounded-lg">
                   <div className="font-bold mb-2">{movie?.title}</div>
                   <div className="grid grid-cols-4 gap-2">
-                    {group.map(actorId => {
-                      const actor = actors.find(a => a.id === actorId);
+                    {group.map((actorId) => {
+                      const actor = actors.find((a) => a.id === actorId);
                       return (
                         <div key={actorId} className="text-sm">
                           {actor?.name}
