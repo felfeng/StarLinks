@@ -86,6 +86,18 @@ const Grid: React.FC<GridProps> = ({ actors, movies }) => {
     );
   };
 
+  const getTextSize = (name: string) => {
+    const longestWord = name
+      .split(" ")
+      .reduce((longest, current) =>
+        current.length > longest.length ? current : longest
+      );
+
+    return longestWord.length > 7
+      ? "text-[10px] md:text-base"
+      : "text-sm md:text-lg";
+  };
+
   return (
     <div className="grid-container max-w-2xl mx-auto px-4">
       <div className={`grid grid-cols-4 gap-2 md:gap-4 rounded-lg`}>
@@ -105,7 +117,7 @@ const Grid: React.FC<GridProps> = ({ actors, movies }) => {
             }`}
             onClick={() => !isCompleted(actor.id) && handleSelect(actor.id)}
           >
-            {actor.name}
+            <span className={`${getTextSize(actor.name)}`}>{actor.name}</span>
           </div>
         ))}
       </div>
