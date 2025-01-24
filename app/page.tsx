@@ -1,6 +1,8 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Grid from "./components/grid";
+import SignIn from "./components/auth/signIn";
+import SignUp from "./components/auth/signUp";
 
 interface Actor {
   id: string;
@@ -38,29 +40,34 @@ const App = () => {
   useEffect(() => {
     const fetchMoviesAndActors = async () => {
       try {
-        const moviesResponse = await fetch('/api/tmdb?endpoint=popular');
+        const moviesResponse = await fetch("/api/tmdb?endpoint=popular");
         const moviesData: MovieResponse = await moviesResponse.json();
 
         const top50Movies = moviesData.results.slice(0, 50);
-        
-        console.log('All 50 movies:', top50Movies.map(movie => ({
-          title: movie.title,
-          id: movie.id,
-          vote_count: movie.vote_count,
-          vote_average: movie.vote_average
-        })));
-        
+
+        console.log(
+          "All 50 movies:",
+          top50Movies.map((movie) => ({
+            title: movie.title,
+            id: movie.id,
+            vote_count: movie.vote_count,
+            vote_average: movie.vote_average,
+          }))
+        );
+
         const selectedMovies = moviesData.results
           .slice(0, 50) // out of top 50 popular movies
           .sort(() => Math.random() - 0.5)
-          .slice(0, 4);  // get 4 random movies
+          .slice(0, 4); // get 4 random movies
 
         // fetch cast for each movie
         const moviesWithCast = await Promise.all(
           selectedMovies.map(async (movie) => {
-            const creditsResponse = await fetch(`/api/tmdb?endpoint=credits&movieId=${movie.id}`);
+            const creditsResponse = await fetch(
+              `/api/tmdb?endpoint=credits&movieId=${movie.id}`
+            );
             const creditsData: CreditsResponse = await creditsResponse.json();
-            
+
             // get top 4 billed actors
             const topCast = creditsData.cast
               .filter((actor) => actor.known_for_department === "Acting")
@@ -73,21 +80,22 @@ const App = () => {
             return {
               id: movie.id,
               title: movie.title,
-              actors: topCast
+              actors: topCast,
             };
           })
         );
 
         setMovies(moviesWithCast);
-        
+
         // combine and shuffle all actors for the grid
-        const allActors = moviesWithCast.flatMap(movie => movie.actors)
+        const allActors = moviesWithCast
+          .flatMap((movie) => movie.actors)
           .sort(() => Math.random() - 0.5);
-        
+
         setActors(allActors);
         setLoading(false);
       } catch (error) {
-        console.error('Error fetching data:', error);
+        console.error("Error fetching data:", error);
         setLoading(false);
       }
     };
