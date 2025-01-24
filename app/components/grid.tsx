@@ -87,12 +87,12 @@ const Grid: React.FC<GridProps> = ({ actors, movies }) => {
   };
 
   return (
-    <div className="grid-container max-w-2xl mx-auto">
-      <div className={`grid grid-cols-4 gap-4 rounded-lg`}>
+    <div className="grid-container max-w-2xl mx-auto px-4">
+      <div className={`grid grid-cols-4 gap-2 md:gap-4 rounded-lg`}>
         {actors.map((actor) => (
           <div
             key={actor.id}
-            className={`flex items-center justify-center text-center rounded-lg cursor-pointer aspect-[3/1.7] uppercase font-bold text-lg ${
+            className={`flex items-center justify-center text-center rounded-lg cursor-pointer aspect-square md:aspect-[3/1.7] text-sm md:text-lg uppercase font-bold text-lg ${
               isCompleted(actor.id)
                 ? "bg-green text-white" // completed group style
                 : selected.includes(actor.id)
