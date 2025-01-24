@@ -14,7 +14,7 @@ type TMDBCastMember = {
 };
 
 import { NextResponse } from "next/server";
-import axios, { all } from "axios";
+import axios from "axios";
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
