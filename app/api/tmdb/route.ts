@@ -31,7 +31,7 @@ export async function GET(request: Request) {
   try {
     if (endpoint === "popular") {
       const pages = await Promise.all(
-        [1, 2, 3, 4, 5, 6, 7, 8].map((page) =>
+        [1, 2, 3].map((page) =>
           axios.get(`${process.env.TMDB_API_URL}/discover/movie`, {
             params: {
               api_key: process.env.TMDB_API_KEY,
