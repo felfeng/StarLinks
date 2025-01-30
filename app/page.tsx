@@ -38,20 +38,14 @@ const App = () => {
   const [actors, setActors] = useState<Actor[]>([]);
   const [movies, setMovies] = useState<Movie[]>([]);
   const [loading, setLoading] = useState(true);
-  const router = useRouter();
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     const unsubscribe = onAuth((user) => {
-      if (!user) {
-        router.push("/signin");
-      } else {
-        setUser(user);
-      }
+      setUser(user);
     });
-
     return () => unsubscribe();
-  }, [router]);
+  }, []);
 
   useEffect(() => {
     const fetchMoviesAndActors = async () => {
