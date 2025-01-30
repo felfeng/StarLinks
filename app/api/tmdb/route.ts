@@ -19,6 +19,8 @@ const EXCLUDED_MOVIE_IDS = [
   244786,
 ];
 
+const delay = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
 import { NextResponse } from "next/server";
 import axios from "axios";
 
@@ -46,6 +48,7 @@ export async function GET(request: Request) {
               "vote_average.gte": 8.0,
               page: page,
             },
+            timeout: 5000,
           })
         )
       );
@@ -54,40 +57,40 @@ export async function GET(request: Request) {
         .flatMap((response) => response.data.results)
         .filter((movie) => !EXCLUDED_MOVIE_IDS.includes(movie.id));
 
-      // const selectedMovies = [];
-      // const usedActorIds = new Set();
+      const selectedMovies = [];
+      const usedActorIds = new Set();
 
-      // for (const movie of allMovies) {
-      //   if (selectedMovies.length === 150) break;
+      for (const movie of allMovies) {
+        if (selectedMovies.length === 150) break;
 
-      //   const credits = await axios.get(
-      //     `${process.env.TMDB_API_URL}/movie/${movie.id}/credits`,
-      //     {
-      //       params: {
-      //         api_key: process.env.TMDB_API_KEY,
-      //       },
-      //     }
-      //   );
+        const credits = await axios.get(
+          `${process.env.TMDB_API_URL}/movie/${movie.id}/credits`,
+          {
+            params: {
+              api_key: process.env.TMDB_API_KEY,
+            },
+          }
+        );
 
-      //   const topActors = credits.data.cast
-      //     .filter(
-      //       (actor: TMDBCastMember) => actor.known_for_department === "Acting"
-      //     )
-      //     .slice(0, 4);
+        const topActors = credits.data.cast
+          .filter(
+            (actor: TMDBCastMember) => actor.known_for_department === "Acting"
+          )
+          .slice(0, 4);
 
-      //   const hasOverlap = topActors.some((actor: TMDBCastMember) =>
-      //     usedActorIds.has(actor.id)
-      //   );
+        const hasOverlap = topActors.some((actor: TMDBCastMember) =>
+          usedActorIds.has(actor.id)
+        );
 
-      //   if (!hasOverlap && topActors.length === 4) {
-      //     selectedMovies.push(movie);
-      //     topActors.forEach((actor: TMDBCastMember) =>
-      //       usedActorIds.add(actor.id)
-      //     );
-      //   }
-      // }
+        if (!hasOverlap && topActors.length === 4) {
+          selectedMovies.push(movie);
+          topActors.forEach((actor: TMDBCastMember) =>
+            usedActorIds.add(actor.id)
+          );
+        }
+      }
 
-      return NextResponse.json({ results: allMovies });
+      return NextResponse.json({ results: selectedMovies });
     }
 
     if (endpoint === "credits" && movieId) {
