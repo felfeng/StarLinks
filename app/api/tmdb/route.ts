@@ -13,6 +13,11 @@ type TMDBCastMember = {
   order: number;
 };
 
+const EXCLUDED_MOVIE_IDS = [
+  354912, 10681, 77338, 129, 637, 13, 278, 8587, 324786, 280, 185, 14, 489, 62,
+  372058, 600, 508442, 539, 641, 4935,
+];
+
 import { NextResponse } from "next/server";
 import axios from "axios";
 
