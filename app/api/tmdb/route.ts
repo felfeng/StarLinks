@@ -49,9 +49,23 @@ export async function GET(request: Request) {
         )
       );
 
-      const allMovies = pages
-        .flatMap((response) => response.data.results)
-        .filter((movie) => !EXCLUDED_MOVIE_IDS.includes(movie.id));
+      const allMoviesBeforeFilter = pages.flatMap(
+        (response) => response.data.results
+      );
+      console.log(
+        "All movies before filtering:",
+        allMoviesBeforeFilter.map((movie) => ({
+          id: movie.id,
+          title: movie.title,
+          vote_count: movie.vote_count,
+          vote_average: movie.vote_average,
+        }))
+      );
+
+      const allMovies = allMoviesBeforeFilter.filter(
+        (movie) => !EXCLUDED_MOVIE_IDS.includes(movie.id)
+      );
+      console.log("Movies after exclusion filter:", allMovies.length);
 
       const selectedMovies = [];
       const usedActorIds = new Set();
