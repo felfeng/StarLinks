@@ -49,7 +49,10 @@ export async function GET(request: Request) {
         )
       );
 
-      const allMovies = pages.flatMap((response) => response.data.results);
+      const allMovies = pages
+        .flatMap((response) => response.data.results)
+        .filter((movie) => !EXCLUDED_MOVIE_IDS.includes(movie.id));
+
       const selectedMovies = [];
       const usedActorIds = new Set();
 
