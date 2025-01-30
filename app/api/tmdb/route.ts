@@ -15,7 +15,8 @@ type TMDBCastMember = {
 
 const EXCLUDED_MOVIE_IDS = [
   354912, 10681, 77338, 129, 637, 13, 278, 8587, 324786, 280, 185, 14, 489, 62,
-  372058, 600, 508442, 539, 641, 4935, 497, 207,
+  372058, 600, 508442, 539, 641, 4935, 497, 207, 103, 490132, 77, 101, 510, 73,
+  244786,
 ];
 
 import { NextResponse } from "next/server";
@@ -49,58 +50,44 @@ export async function GET(request: Request) {
         )
       );
 
-      const allMoviesBeforeFilter = pages.flatMap(
-        (response) => response.data.results
-      );
-      console.log(
-        "All movies before filtering:",
-        allMoviesBeforeFilter.map((movie) => ({
-          id: movie.id,
-          title: movie.title,
-          vote_count: movie.vote_count,
-          vote_average: movie.vote_average,
-        }))
-      );
+      const allMovies = pages
+        .flatMap((response) => response.data.results)
+        .filter((movie) => !EXCLUDED_MOVIE_IDS.includes(movie.id));
 
-      const allMovies = allMoviesBeforeFilter.filter(
-        (movie) => !EXCLUDED_MOVIE_IDS.includes(movie.id)
-      );
-      console.log("Movies after exclusion filter:", allMovies.length);
+      // const selectedMovies = [];
+      // const usedActorIds = new Set();
 
-      const selectedMovies = [];
-      const usedActorIds = new Set();
+      // for (const movie of allMovies) {
+      //   if (selectedMovies.length === 150) break;
 
-      for (const movie of allMovies) {
-        if (selectedMovies.length === 50) break;
+      //   const credits = await axios.get(
+      //     `${process.env.TMDB_API_URL}/movie/${movie.id}/credits`,
+      //     {
+      //       params: {
+      //         api_key: process.env.TMDB_API_KEY,
+      //       },
+      //     }
+      //   );
 
-        const credits = await axios.get(
-          `${process.env.TMDB_API_URL}/movie/${movie.id}/credits`,
-          {
-            params: {
-              api_key: process.env.TMDB_API_KEY,
-            },
-          }
-        );
+      //   const topActors = credits.data.cast
+      //     .filter(
+      //       (actor: TMDBCastMember) => actor.known_for_department === "Acting"
+      //     )
+      //     .slice(0, 4);
 
-        const topActors = credits.data.cast
-          .filter(
-            (actor: TMDBCastMember) => actor.known_for_department === "Acting"
-          )
-          .slice(0, 4);
+      //   const hasOverlap = topActors.some((actor: TMDBCastMember) =>
+      //     usedActorIds.has(actor.id)
+      //   );
 
-        const hasOverlap = topActors.some((actor: TMDBCastMember) =>
-          usedActorIds.has(actor.id)
-        );
+      //   if (!hasOverlap && topActors.length === 4) {
+      //     selectedMovies.push(movie);
+      //     topActors.forEach((actor: TMDBCastMember) =>
+      //       usedActorIds.add(actor.id)
+      //     );
+      //   }
+      // }
 
-        if (!hasOverlap && topActors.length === 4) {
-          selectedMovies.push(movie);
-          topActors.forEach((actor: TMDBCastMember) =>
-            usedActorIds.add(actor.id)
-          );
-        }
-      }
-
-      return NextResponse.json({ results: selectedMovies });
+      return NextResponse.json({ results: allMovies });
     }
 
     if (endpoint === "credits" && movieId) {

@@ -59,11 +59,9 @@ const App = () => {
         const moviesResponse = await fetch("/api/tmdb?endpoint=popular");
         const moviesData: MovieResponse = await moviesResponse.json();
 
-        const top50Movies = moviesData.results.slice(0, 50);
-
         console.log(
-          "All 50 movies:",
-          top50Movies.map((movie) => ({
+          "All movies:",
+          moviesData.results.map((movie) => ({
             title: movie.title,
             id: movie.id,
             vote_count: movie.vote_count,
@@ -72,7 +70,6 @@ const App = () => {
         );
 
         const selectedMovies = moviesData.results
-          .slice(0, 50) // out of top 50 popular movies
           .sort(() => Math.random() - 0.5)
           .slice(0, 4); // get 4 random movies
 
