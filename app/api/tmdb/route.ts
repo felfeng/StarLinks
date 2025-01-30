@@ -49,7 +49,7 @@ export async function GET(request: Request) {
       const usedActorIds = new Set();
 
       for (const movie of allMovies) {
-        if (selectedMovies.length === 4) break;
+        if (selectedMovies.length === 50) break;
 
         const credits = await axios.get(
           `${process.env.TMDB_API_URL}/movie/${movie.id}/credits`,
