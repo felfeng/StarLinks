@@ -69,39 +69,66 @@ const App = () => {
           }))
         );
 
-        const selectedMovies = moviesData.results
-          .sort(() => Math.random() - 0.5)
-          .slice(0, 4); // get 4 random movies
+        let selectedMovies: Movie[] = [];
+        let attempts = 0;
+        const maxAttempts = 50;
 
-        // fetch cast for each movie
-        const moviesWithCast = await Promise.all(
-          selectedMovies.map(async (movie) => {
-            const creditsResponse = await fetch(
-              `/api/tmdb?endpoint=credits&movieId=${movie.id}`
-            );
-            const creditsData: CreditsResponse = await creditsResponse.json();
+        while (selectedMovies.length < 4 && attempts < maxAttempts) {
+          attempts++;
 
-            // get top 4 billed actors
-            const topCast = creditsData.cast
-              .filter((actor) => actor.known_for_department === "Acting")
-              .slice(0, 4)
-              .map((actor) => ({
-                id: actor.id.toString(),
-                name: actor.name,
-              }));
+          const tempSelected = moviesData.results
+            .sort(() => Math.random() - 0.5)
+            .slice(0, 4);
 
-            return {
-              id: movie.id,
-              title: movie.title,
-              actors: topCast,
-            };
-          })
-        );
+          // check for actor overlaps
+          const movieDetails = await Promise.all(
+            tempSelected.map(async (movie) => {
+              const creditsResponse = await fetch(
+                `/api/tmdb?endpoint=credits&movieId=${movie.id}`
+              );
+              const creditsData: CreditsResponse = await creditsResponse.json();
 
-        setMovies(moviesWithCast);
+              return {
+                id: movie.id,
+                title: movie.title,
+                actors: creditsData.cast
+                  .filter((actor) => actor.known_for_department === "Acting")
+                  .slice(0, 4)
+                  .map((actor) => ({
+                    id: actor.id.toString(),
+                    name: actor.name,
+                  })),
+              };
+            })
+          );
+
+          const usedActorIds = new Set();
+          let hasOverlap = false;
+
+          for (const movie of movieDetails) {
+            for (const actor of movie.actors) {
+              if (usedActorIds.has(actor.id)) {
+                hasOverlap = true;
+                break;
+              }
+              usedActorIds.add(actor.id);
+            }
+            if (hasOverlap) break;
+          }
+
+          if (
+            !hasOverlap &&
+            movieDetails.every((movie) => movie.actors.length === 4)
+          ) {
+            selectedMovies = movieDetails;
+            break;
+          }
+        }
+
+        setMovies(selectedMovies);
 
         // combine and shuffle all actors for the grid
-        const allActors = moviesWithCast
+        const allActors = selectedMovies
           .flatMap((movie) => movie.actors)
           .sort(() => Math.random() - 0.5);
 
