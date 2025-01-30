@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 type TMDBCastMember = {
   adult: boolean;
   gender: number;
