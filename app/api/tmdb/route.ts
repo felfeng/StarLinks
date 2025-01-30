@@ -40,12 +40,12 @@ export async function GET(request: Request) {
   try {
     if (endpoint === "popular") {
       const pages = await Promise.all(
-        [1, 2, 3, 4].map((page) =>
+        [1, 2, 3, 4, 5, 6, 7, 8].map((page) =>
           axios.get(`${process.env.TMDB_API_URL}/discover/movie`, {
             params: {
               api_key: process.env.TMDB_API_KEY,
               sort_by: "vote_count.desc",
-              "vote_count.gte": 10000,
+              "vote_count.gte": 8000,
               "vote_average.gte": 7.0,
               page: page,
               per_page: 40,
@@ -59,40 +59,7 @@ export async function GET(request: Request) {
         .flatMap((response) => response.data.results)
         .filter((movie) => !EXCLUDED_MOVIE_IDS.includes(movie.id));
 
-      const selectedMovies = [];
-      const usedActorIds = new Set();
-
-      for (const movie of allMovies) {
-        if (selectedMovies.length === 150) break;
-
-        const credits = await axios.get(
-          `${process.env.TMDB_API_URL}/movie/${movie.id}/credits`,
-          {
-            params: {
-              api_key: process.env.TMDB_API_KEY,
-            },
-          }
-        );
-
-        const topActors = credits.data.cast
-          .filter(
-            (actor: TMDBCastMember) => actor.known_for_department === "Acting"
-          )
-          .slice(0, 4);
-
-        const hasOverlap = topActors.some((actor: TMDBCastMember) =>
-          usedActorIds.has(actor.id)
-        );
-
-        if (!hasOverlap && topActors.length === 4) {
-          selectedMovies.push(movie);
-          topActors.forEach((actor: TMDBCastMember) =>
-            usedActorIds.add(actor.id)
-          );
-        }
-      }
-
-      return NextResponse.json({ results: selectedMovies });
+      return NextResponse.json({ results: allMovies });
     }
 
     if (endpoint === "credits" && movieId) {
