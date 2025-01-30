@@ -101,6 +101,7 @@ export async function GET(request: Request) {
           params: {
             api_key: process.env.TMDB_API_KEY,
           },
+          timeout: 5000,
         }
       );
       return NextResponse.json(response.data);
