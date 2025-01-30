@@ -39,14 +39,15 @@ export async function GET(request: Request) {
   try {
     if (endpoint === "popular") {
       const pages = await Promise.all(
-        [1, 2, 3, 4, 5, 6, 7, 8].map((page) =>
+        [1, 2, 3, 4].map((page) =>
           axios.get(`${process.env.TMDB_API_URL}/discover/movie`, {
             params: {
               api_key: process.env.TMDB_API_KEY,
               sort_by: "vote_count.desc",
               "vote_count.gte": 10000,
-              "vote_average.gte": 8.0,
+              "vote_average.gte": 7.0,
               page: page,
+              per_page: 40,
             },
             timeout: 5000,
           })
