@@ -17,10 +17,11 @@ interface GridProps {
   movies: Movie[];
 }
 
-const Grid: React.FC<GridProps> = ({ actors, movies }) => {
+const Grid: React.FC<GridProps> = ({ actors: initialActors, movies }) => {
   const [selected, setSelected] = useState<string[]>([]);
   const [completedGroups, setCompletedGroups] = useState<string[][]>([]);
   const [mistakes, setMistakes] = useState(3); // can only make 3 mistakes
+  const [actors, setActors] = useState(initialActors);
 
   const handleSelect = (id: string) => {
     if (selected.includes(id)) {
@@ -59,7 +60,7 @@ const Grid: React.FC<GridProps> = ({ actors, movies }) => {
 
   const handleShuffle = () => {
     const shuffledActors = [...actors].sort(() => Math.random() - 0.5);
-    console.log("Shuffled actors:", shuffledActors);
+    setActors(shuffledActors);
   };
 
   const isCompleted = (id: string) =>
