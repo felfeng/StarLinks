@@ -5,6 +5,7 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { onAuth } from "./lib/firebase/auth";
 import Grid from "./components/grid";
+import WelcomePopup from "./components/WelcomePopup";
 
 interface Actor {
   id: string;
@@ -156,6 +157,7 @@ const App = () => {
         Create four groups of four!
       </h2>
       <Grid actors={actors} gridSize={4} movies={movies} />
+      <WelcomePopup />
     </div>
   );
 };
